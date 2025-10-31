@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday Countdown</title>
+
+<!-- Font and icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(180deg, #ff1a1a 0%, #990000 40%, #000000 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .countdown-item {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    user-select: none;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+
+  .countdown-item span {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+
+  .countdown-label {
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-weight: normal;
+  }
+
+  .images {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .image-box {
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+
+  .image-box:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  .image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+  }
+
+  .birthday-message {
+    margin-top: 25px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffd700;
+    text-shadow: 1px 1px 3px #800000;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    user-select: none;
+  }
+
+  /* Music button */
+  .music-btn {
+    position: fixed;
+    top: 20px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    transition: transform 0.2s ease;
+  }
+
+  .music-btn:hover {
+    transform: scale(1.1);
+  }
+
+  /* Floating title */
+  .floating-title {
+    position: fixed;
+    bottom: 15px;
+    white-space: nowrap;
+    font-size: 1.8rem;
+    color: #ffd700;
+    font-weight: bold;
+    animation: scrollText 10s linear infinite;
+    text-shadow: 0 0 10px #ff6f61;
+  }
+
+  @keyframes scrollText {
+    0% { right: -100%; }
+    100% { right: 100%; }
+  }
+  /* Fullscreen image viewer */
+.fullscreen {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.fullscreen img {
+  max-width: 90%;
+  max-height: 85%;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+.fullscreen .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  font-size: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.fullscreen .close-btn:hover {
+  transform: scale(1.1);
+  color: #ff6f61;
+}
+
+</style>
+</head>
+<body>
+
+<h1>🎉 Happy Birthday! 🎉</h1>
+
+<!-- Music icon -->
+<button class="music-btn" id="musicBtn"><i class="fa-solid fa-music"></i></button>
+<audio id="bgMusic" loop autoplay>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="countdown">
+  <div class="countdown-item"><span id="years">0</span><div class="countdown-label">Years</div></div>
+  <div class="countdown-item"><span id="months">0</span><div class="countdown-label">Months</div></div>
+  <div class="countdown-item"><span id="days">0</span><div class="countdown-label">Days</div></div>
+  <div class="countdown-item"><span id="hours">0</span><div class="countdown-label">Hours</div></div>
+  <div class="countdown-item"><span id="minutes">0</span><div class="countdown-label">Minutes</div></div>
+  <div class="countdown-item"><span id="seconds">0</span><div class="countdown-label">Seconds</div></div>
+</div>
+
+<div class="images">
+  <div class="image-box"><img src="1.jpg" alt="image1" /></div>
+  <div class="image-box"><img src="9.jpg" alt="image2" /></div>
+  <div class="image-box"><img src="3.jpg" alt="image3" /></div>
+  <div class="image-box"><img src="7.jpg" alt="image4" /></div>
+  <div class="image-box"><img src="10.jpg" alt="image5" /></div>
+</div>
+<!-- Fullscreen Image Viewer -->
+<div id="fullscreenViewer" class="fullscreen">
+    <span class="close-btn">&times;</span>
+    <img id="fullImage" src="" alt="Full Image">
+</div>
+  
+
+<div class="birthday-message">
+    Happy Birthday, Kishu! 🎉🎈  
+    Wishing you endless joy, love, and laughter on your special day and always! 💖🎂✨  
+    Hum Hamesha tere sath hai 😊 iss birthday pe hum sath nhi to kya hua dil se to hamesha sath he rahenge.  
+    Hamesha khush raho aur apne sapno ko pura karte raho! 🌟  
+</div>
+
+<!-- Floating title -->
+<div class="floating-title">💞 Happy Birthday Kishu 💞</div>
+
+<script>
+  const dob = new Date("2009-11-01T00:00:00");
+
+  function updateAge() {
+    const now = new Date();
+
+    let years = now.getFullYear() - dob.getFullYear();
+    let months = now.getMonth() - dob.getMonth();
+    let days = now.getDate() - dob.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+
+    document.getElementById("years").innerText = years;
+    document.getElementById("months").innerText = months;
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = hours.toString().padStart(2, "0");
+    document.getElementById("minutes").innerText = minutes.toString().padStart(2, "0");
+    document.getElementById("seconds").innerText = seconds.toString().padStart(2, "0");
+  }
+
+  setInterval(updateAge, 1000);
+  updateAge();
+
+  // Music control
+  const music = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicBtn');
+  let playing = true;
+
+  musicBtn.addEventListener('click', () => {
+    if (playing) {
+      music.pause();
+      musicBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+    } else {
+      music.play();
+      musicBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+    }
+    playing = !playing;
+  });
+  // Fullscreen image viewer logic
+const imageBoxes = document.querySelectorAll('.image-box img');
+const viewer = document.getElementById('fullscreenViewer');
+const fullImage = document.getElementById('fullImage');
+const closeBtn = document.querySelector('.close-btn');
+
+imageBoxes.forEach(img => {
+  img.addEventListener('click', () => {
+    fullImage.src = img.src;
+    viewer.style.display = 'flex';
+  });
+});
+
+closeBtn.addEventListener('click', () => {
+  viewer.style.display = 'none';
+});
+
+viewer.addEventListener('click', (e) => {
+  if (e.target === viewer) viewer.style.display = 'none';
+});
+
+</script>
+</body>
+</html>
