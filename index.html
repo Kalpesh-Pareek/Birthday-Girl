@@ -130,22 +130,28 @@
     transform: scale(1.1);
   }
 
-  /* Floating title */
-  .floating-title {
-    position: fixed;
-    bottom: 15px;
-    white-space: nowrap;
-    font-size: 1.8rem;
-    color: #ffd700;
-    font-weight: bold;
-    animation: scrollText 10s linear infinite;
-    text-shadow: 0 0 10px #ff6f61;
-  }
+.bottom-marquee {
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  margin-top: 20px; /* gap from paragraph */
+}
 
-  @keyframes scrollText {
-    0% { right: -100%; }
-    100% { right: 100%; }
-  }
+.bottom-marquee span {
+  display: inline-block;
+  white-space: nowrap;
+  color: #ffcc00;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px #ff6699;
+  animation: scrollText 10s linear infinite;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
   /* Fullscreen image viewer */
 .fullscreen {
   display: none; /* hidden by default */
@@ -227,7 +233,9 @@
 </div>
 
 <!-- Floating title -->
-<div class="floating-title">💞 Happy Birthday Kishu 💞</div>
+<div class="bottom-marquee">
+    <span>💞 Happy Birthday Kishu 💞</span>
+  </div>
 
 <script>
   const dob = new Date("2009-11-01T00:00:00");
@@ -304,4 +312,5 @@ viewer.addEventListener('click', (e) => {
 </script>
 </body>
 </html>
+
 
